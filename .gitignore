@@ -41,3 +41,5 @@ Backend/build
 Backend/dist
 # Prisma
 Backend/prisma/migrations
+Backend/buildcache
+Backend/*.http
