@@ -17,6 +17,7 @@ model usuarios {
   id_username   String @id @default(uuid())
   username      String @unique
   email         String @unique
+  password      String
   tasks         tasks []
 }
 
