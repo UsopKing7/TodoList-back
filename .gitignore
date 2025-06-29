@@ -39,3 +39,5 @@ Backend/node_modules
 Backend/build
 # or
 Backend/dist
+# Prisma
+Backend/prisma/migrations
