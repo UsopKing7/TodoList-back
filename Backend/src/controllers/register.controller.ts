@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { formatError } from '../utils/formError'
-import { registerServices } from '../services/register.services'
+import { registerServices } from '../services/register.service'
 import { schemaRegister } from '../schemas/register.schema'
 import { Username } from '../types/username.types'
 
