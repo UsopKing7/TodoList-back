@@ -1,6 +1,7 @@
 import { prisma } from '../config/connection'
 
 export const tasksService = {
+  // Endpoint para mostrar todas las tareas que tiene el usuario
   getAllTaksById: async ( id_usuario: string ) => {
     const usuarioExiste = await prisma.usuarios.findUnique({
       where: {
@@ -25,6 +26,7 @@ export const tasksService = {
     }
   },
 
+  // enpoind para crear una tarea por usuario
   createTaskById: async(tasks: { title: string, description: string, id_usuario: string }) => {
     const usuarioExiste = await prisma.usuarios.findUnique({
       where: {
@@ -45,5 +47,43 @@ export const tasksService = {
     if (!newTask) throw new Error('No hay datos en el body')
 
     return newTask
+  },
+
+  // enpoind para marcar como completado, pendiente o en progreso ==> default progreso
+  taskModifiStateComplete: async(tasks: { id_task: string, id_usuario: string, state: boolean }) => {
+    const usuarioExiste = await prisma.usuarios.findUnique({
+      where: {
+        id_username: tasks.id_usuario
+      }
+    })
+
+    if (!usuarioExiste) throw new Error('No se encontro el usuario')
+
+    const tareaExiste = await prisma.tasks.findFirst({
+      where: {
+        id_tarea: tasks.id_task,
+        id_usuario: tasks.id_usuario
+      }
+    })
+
+    if (!tareaExiste) throw new Error('No se encontro la tarea del usuario')
+
+    const taskComplete = await prisma.tasks.update({
+      data: {
+        state: tasks.state
+      },
+      where: {
+        id_tarea: tasks.id_task
+      },
+      select: {
+        id_tarea: true,
+        title: true,
+        state: true,
+        apdated_in: true,
+        created_in: true,
+      }
+    })
+
+    return taskComplete
   }
 }

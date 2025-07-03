@@ -38,3 +38,22 @@ export const createTaskById = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const taskCompleteState = async (req: Request, res: Response) => {
+  try {
+    const { id_task, id_usuario } = req.params
+    if (!id_task) throw new Error('Error al obtener el id de la tarea')
+    if (!id_usuario) throw new Error('Error al obtener el id del usuario')
+
+    const { state: boolean } = req.body
+
+    const taskComplete = await tasksService.taskModifiStateComplete({ id_task, id_usuario, state: boolean })
+
+    res.status(201).json(taskComplete)
+  } catch (error) {
+    res.status(500).json({
+      message: 'Algo salio mal',
+      error: formatError(error)
+    })
+  }
+}
