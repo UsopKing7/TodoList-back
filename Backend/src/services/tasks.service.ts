@@ -87,7 +87,7 @@ export const tasksService = {
     return taskComplete
   },
 
-  updateTask: async (task: { id_task: string, title?: string | undefined , description?: string | undefined, id_usuario: string }) => {
+  updateTask: async (task: { id_task: string, title?: string, description?: string, id_usuario: string }) => {
     const usuarioExiste = await prisma.usuarios.findUnique({
       where: {
         id_username: task.id_usuario
@@ -104,11 +104,13 @@ export const tasksService = {
     if (!usuarioExiste) throw new Error('El usuario no existe')
     if (!tareaExiste) throw new Error('La tarea no existe')
 
+    const data: { title?: string, description?: string } = {}
+
+    if (task.title !== undefined) data.title = task.title
+    if (task.description !== undefined) data.description = task.description
+    
     const taskUpdate = await prisma.tasks.update({
-      data: {
-        title: String(task.title),
-        description: String(task.description)
-      },
+      data,
       where: {
         id_tarea: task.id_task,
         id_usuario: task.id_usuario
