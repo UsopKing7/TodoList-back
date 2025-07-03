@@ -85,5 +85,38 @@ export const tasksService = {
     })
 
     return taskComplete
+  },
+
+  updateTask: async (task: { id_task: string, title?: string | undefined , description?: string | undefined, id_usuario: string }) => {
+    const usuarioExiste = await prisma.usuarios.findUnique({
+      where: {
+        id_username: task.id_usuario
+      }
+    })
+
+    const tareaExiste = await prisma.tasks.findFirst({
+      where: {
+        id_tarea: task.id_task,
+        id_usuario: task.id_usuario
+      }
+    })
+
+    if (!usuarioExiste) throw new Error('El usuario no existe')
+    if (!tareaExiste) throw new Error('La tarea no existe')
+
+    const taskUpdate = await prisma.tasks.update({
+      data: {
+        title: String(task.title),
+        description: String(task.description)
+      },
+      where: {
+        id_tarea: task.id_task,
+        id_usuario: task.id_usuario
+      }
+    })
+
+    if (!taskUpdate) throw new Error('No se encontraron datos en el body')
+
+    return taskUpdate 
   }
 }

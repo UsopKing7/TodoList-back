@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
 import { formatError } from '../utils/formError'
 import { tasksService } from '../services/tasks.service'
-import { schemaCreateTask } from '../schemas/tasks.schemas'
+import { schemaCreateTask, shemaUpdateTask } from '../schemas/tasks.schemas'
+import { TasksUpadte } from '../types/tasks.types'
 
 export const getAllTaksById = async (req: Request, res: Response) => {
   try {
@@ -50,6 +51,29 @@ export const taskCompleteState = async (req: Request, res: Response) => {
     const taskComplete = await tasksService.taskModifiStateComplete({ id_task, id_usuario, state: boolean })
 
     res.status(201).json(taskComplete)
+  } catch (error) {
+    res.status(500).json({
+      message: 'Algo salio mal',
+      error: formatError(error)
+    })
+  }
+}
+
+export const taskUpdate = async (req: Request, res: Response) => {
+  try {
+    const { id_task, id_usuario } = req.params
+    if (!id_usuario) throw new Error('No se pudo obtener el id del usuario')
+    if (!id_task) throw new Error('No se pudo obtener el id de la tarea')
+
+    const result = shemaUpdateTask.safeParse(req.body)
+
+    if (!result.success) throw new Error('Error de validacion: ' + result.error.errors.map(e => e.message).join(', '))
+
+    const { title, description } = result.data
+
+    if (!title && !description) throw new Error('Almenos se tiene que llenar un campo')
+
+    const newUpdateTask = await tasksService.updateTask({ id_task, id_usuario, title, description })
   } catch (error) {
     res.status(500).json({
       message: 'Algo salio mal',
