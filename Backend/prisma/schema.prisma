@@ -19,6 +19,8 @@ model usuarios {
   email         String @unique
   password      String
   tasks         tasks []
+
+  token tokens[]
 }
 
 model tasks {
@@ -29,6 +31,14 @@ model tasks {
   created_in    DateTime @default(now())
   apdated_in    DateTime @updatedAt
   id_usuario    String
+
+  usuario       usuarios @relation(fields: [id_usuario], references: [id_username])
+}
+
+model tokens {
+  id_token      String @id @default(uuid())
+  id_usuario    String
+  token         String
 
   usuario       usuarios @relation(fields: [id_usuario], references: [id_username])
 }
