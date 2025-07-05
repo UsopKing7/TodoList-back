@@ -115,3 +115,37 @@ export const taskDelete = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const getTaskComplete = async (req: Request, res: Response) => {
+  try {
+    const { id_usuario } = req.params
+    
+    if (!id_usuario) throw new Error('No se pudo obtener el id del usuario')
+
+    const taskCompletes = await tasksService.getTaksComplete(id_usuario)
+
+    res.status(200).json(taskCompletes)
+  } catch (error) {
+    res.status(500).json({
+      message: 'Algo salio mal',
+      error: formatError(error)
+    })
+  }
+}
+
+export const getTaskPending = async (req: Request, res: Response) => {
+  try {
+    const { id_usuario } = req.params
+
+    if (!id_usuario) throw new Error('No se pudo obtener el id del usuario')
+
+    const taskPening = await tasksService.getTaskPending(id_usuario)
+
+    res.status(200).json(taskPening)
+  } catch (error) {
+    res.status(500).json({
+      message: 'Algo salio mal',
+      error: formatError(error)
+    })
+  }
+}

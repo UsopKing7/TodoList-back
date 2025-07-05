@@ -87,6 +87,7 @@ export const tasksService = {
     return taskComplete
   },
 
+  // endpoint para actualizar datos como title y description 
   updateTask: async (task: { id_task: string, title?: string, description?: string, id_usuario: string }) => {
     const usuarioExiste = await prisma.usuarios.findUnique({
       where: {
@@ -122,6 +123,7 @@ export const tasksService = {
     return taskUpdate 
   },
 
+  // enpoind para eliminar la tarea 
   deleteTaskById: async (task: { id_task: string, id_usuario: string }) => {
     const usuarioExiste = await prisma.usuarios.findUnique({
       where: {
@@ -147,5 +149,62 @@ export const tasksService = {
     })
 
     return { message: 'Tarea eliminada correctamente'}
+  },
+
+  // enpoind para filtrar por tareas completa
+  getTaksComplete: async ( id_usuario: string ) => {
+    const usuarioExiste = await prisma.usuarios.findUnique({
+      where: {
+        id_username: id_usuario
+      }
+    })
+    
+    if (!usuarioExiste) throw new Error('No se encontro el usuario')
+    
+    const taskCompletas = await prisma.tasks.findMany({
+      where: {
+        id_usuario: id_usuario,
+        state: true
+      },
+      select: {
+        id_usuario: true,
+        id_tarea: true,
+        title: true,
+        description: true,
+        state: true
+      }
+    })
+
+    if (taskCompletas.length === 0) throw new Error('No hay tareas completas par este usuario')
+
+    return taskCompletas
+  },
+
+  getTaskPending: async ( id_usuario: string ) => {
+    const usuarioExiste = await prisma.usuarios.findUnique({
+      where: {
+        id_username: id_usuario
+      }
+    })
+    
+    if (!usuarioExiste) throw new Error('No se encontro el usuario')
+    
+    const taskCompletas = await prisma.tasks.findMany({
+      where: {
+        id_usuario: id_usuario,
+        state: false
+      },
+      select: {
+        id_usuario: true,
+        id_tarea: true,
+        title: true,
+        description: true,
+        state: true
+      }
+    })
+
+    if (taskCompletas.length === 0) throw new Error('No hay tareas completas par este usuario')
+
+    return taskCompletas
   }
 }
