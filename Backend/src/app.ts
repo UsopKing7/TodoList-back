@@ -3,7 +3,7 @@ import { router } from './routes/username.routes'
 import { PORT } from './config/env'
 import cookieParser from 'cookie-parser'
 
-const app = express()
+export const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
