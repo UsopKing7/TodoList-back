@@ -30,7 +30,7 @@ export const createTaskById = async (req: Request, res: Response) => {
     const { title, description } = await result.data
     const newTask = await tasksService.createTaskById({ id_usuario, description, title })
 
-    res.status(200).json(newTask)
+    res.status(201).json(newTask)
   } catch (error) {
     res.status(500).json({
       message: 'Algo salio mal',
