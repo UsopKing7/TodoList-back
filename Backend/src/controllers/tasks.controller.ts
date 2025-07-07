@@ -30,7 +30,7 @@ export const createTaskById = async (req: Request, res: Response) => {
     const { title, description } = await result.data
     const newTask = await tasksService.createTaskById({ id_usuario, description, title })
 
-    res.status(200).json(newTask)
+    res.status(201).json(newTask)
   } catch (error) {
     res.status(500).json({
       message: 'Algo salio mal',
@@ -49,7 +49,7 @@ export const taskCompleteState = async (req: Request, res: Response) => {
 
     const taskComplete = await tasksService.taskModifiStateComplete({ id_task, id_usuario, state: boolean })
 
-    res.status(201).json(taskComplete)
+    res.status(200).json(taskComplete)
   } catch (error) {
     res.status(500).json({
       message: 'Algo salio mal',
