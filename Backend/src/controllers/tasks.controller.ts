@@ -104,9 +104,9 @@ export const taskDelete = async (req: Request, res: Response) => {
     if (!id_usuario) throw new Error('No se pudo obtener el id del usuario')
     if (!id_task) throw new Error('No se pudo obtener el id de la tarea') 
   
-    const taskDelete = tasksService.deleteTaskById({ id_task, id_usuario })
+    const taskDelete = await tasksService.deleteTaskById({ id_task, id_usuario })
   
-    res.status(200).json((await taskDelete).message)
+    res.status(200).json(taskDelete.message)
     
   } catch (error) {
     res.status(500).json({
